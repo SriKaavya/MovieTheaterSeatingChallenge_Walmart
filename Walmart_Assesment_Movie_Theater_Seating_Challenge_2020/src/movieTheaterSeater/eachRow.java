@@ -49,7 +49,7 @@ public class eachRow {
   }
 
   /* method to get the number of empty seats. */
-  public int getSeatsEmpty() {
+  public int getEmptySeats() {
     return seatsEmpty;
   }
 

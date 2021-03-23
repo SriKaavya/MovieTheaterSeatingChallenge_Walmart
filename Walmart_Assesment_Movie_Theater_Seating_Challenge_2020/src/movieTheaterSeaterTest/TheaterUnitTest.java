@@ -1,7 +1,5 @@
 package movieTheaterSeaterTest;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import movieTheaterSeater.Theater;
 import movieTheaterSeater.eachRow;
 import movieTheaterSeater.movieTheaterInterface;
@@ -9,19 +7,19 @@ import movieTheaterSeater.movieTheaterInterface;
 public class TheaterUnitTest {
 	movieTheaterInterface theater;
 
-  public void testAll() {
+  
+  public void testAllCases() {
     testConstructor();
-    testFilling();
-    testFillingInDifferentRows();
-    testFillingMoreThanRemainingSeats();
-    testFillingToCapacity();
-    testSeatsGettingOver();
     testTotalNoOfSeats();
     testGetRow();
     testNotEnoughSeats();
-    testNodeCreation();
-    testFillInNode();
-    testIllegalArguments();
+    testRowCreation();
+    testIllegalArgs();
+    testFilling();
+    testFillingInDifferentRows();
+    testBulkSeats();
+    testFillingToCapacity();
+    testSeatsOver();
   }
 
   public void testConstructor() {
@@ -38,7 +36,7 @@ public class TheaterUnitTest {
   public void testGetRow() {
 	theater = new Theater(10);
 	theater.fillRows("R001", 15);
-    System.out.println(theater.getRow().get(0).getSeatsEmpty()+"\n");
+    System.out.println(theater.getRow().get(0).getEmptySeats()+"\n");
   }
 
   public void testFilling() {
@@ -46,7 +44,7 @@ public class TheaterUnitTest {
     System.out.println(theater.fillRows("R001", 15));
   }
 
-  public void testFillingMoreThanRemainingSeats() {
+  public void testBulkSeats() {
 	theater = new Theater(10);
     System.out.println(theater.fillRows("R001", 200));
   }
@@ -54,15 +52,15 @@ public class TheaterUnitTest {
   public void testFillingInDifferentRows() {
 	theater = new Theater(10);
 	theater.fillRows("R001", 15);
-	theater.fillRows("R002", 15);
-	theater.fillRows("R003", 15);
-	theater.fillRows("R004", 15);
-	theater.fillRows("R005", 15);
+	theater.fillRows("R002", 16);
+	theater.fillRows("R003", 17);
+	theater.fillRows("R004", 16);
+	theater.fillRows("R005", 16);
     System.out.println(theater.fillRows("R001", 4));
   }
 
 
-  public void testSeatsGettingOver() {
+  public void testSeatsOver() {
 	theater = new Theater(10);
 
 	theater.fillRows("R001", 15);
@@ -73,50 +71,46 @@ public class TheaterUnitTest {
     theater.fillRows("R006", 4);
     theater.fillRows("R007", 4);
     theater.fillRows("R008", 2);
-    System.out.println(theater.fillRows("R001",1 ));
+    System.out.println(theater.fillRows("R001",6 ));
   }
 
 
   public void testNotEnoughSeats() {
 	theater = new Theater(10);
-	theater.fillRows("R001", 15);
-	theater.fillRows("R001", 15);
-	theater.fillRows("R001", 15);
-	theater.fillRows("R001", 15);
-	theater.fillRows("R001", 15);
-	theater.fillRows("R001", 4);
-	theater.fillRows("R001", 4);
-    System.out.println(theater.fillRows("R001",4 ));
+	theater.fillRows("R001", 16);
+	theater.fillRows("R002", 13);
+	theater.fillRows("R003", 14);
+	theater.fillRows("R004", 16);
+	theater.fillRows("R005", 2);
+	theater.fillRows("R006", 4);
+	theater.fillRows("R007", 4);
+    System.out.println(theater.fillRows("R008",8 ));
   }
 
 
   public void testFillingToCapacity() {
 	theater = new Theater(10);
 	theater.fillRows("R001", 20);
-	theater.fillRows("R001", 20);
-	theater.fillRows("R001", 20);
-	theater.fillRows("R001", 20);
-	theater.fillRows("R001", 20);
+	theater.fillRows("R002", 20);
+	theater.fillRows("R003", 20);
+	theater.fillRows("R004", 20);
+	theater.fillRows("R005", 20);
     System.out.println(theater.fillRows("R001",1 ));
   }
 
 
-  public void testNodeCreation() {
+  public void testRowCreation() {
     eachRow row = new eachRow('J');
-    System.out.println(row.getSeatsEmpty()+"\n");
+    System.out.println(row.getEmptySeats()+"\n");
   }
 
-  public void testFillInNode() {
-	eachRow row = new eachRow('J');
-    System.out.println(row.fillSeats(2,"R001",new AtomicInteger(20))+"\n");
-  }
 
-  public void testIllegalArguments() {
+  public void testIllegalArgs() {
 	theater = new Theater(10);
     try {
       System.out.println(theater.fillRows("R001", -200));
     } catch (IllegalStateException e) {
-      System.out.println("Illegal argument exception");
+      System.out.println("Illegal input exception");
     }
 
   }

@@ -25,7 +25,7 @@ public class Theater implements movieTheaterInterface {
     rows = new ArrayList<eachRow>();
     int actualRows = (numberOfRows + 1) / 2;
     totalSeats = new AtomicInteger(actualRows * 20);
-    for (char ch = 'J'; ch < 'J'+numberOfRows; ch--) {
+    for (char ch = 'J'; ch > 'J' - numberOfRows; ch--) {
       rows.add(new eachRow(ch));
     }
   }
@@ -35,43 +35,38 @@ public class Theater implements movieTheaterInterface {
     StringBuilder result = new StringBuilder();
     if (numberOfSeats < 0 || reservationNumber == null) {
 
-      result.append("Either reservationNumber is null or number of "
-              + "seats is negative\n");
+      result.append("Wrong input; either reservation number is null or number of seats is negative\n");
       return result.toString();
     }
     List<String> assignedSeats = new ArrayList<>();
     if (numberOfSeats > 20) {
-      result.append(reservationNumber + " ").append("For bulk bookings, contact the customer "
-              + "service directly\n");
+      result.append(reservationNumber + " ").append("For bulk bookings, contact the box office directly\n");
       return result.toString();
     }
 
     if (totalSeats.intValue() < numberOfSeats) {
-      result.append(reservationNumber + " ").append("Sorry, the required number of seats are not "
-              + "available\n");
+      result.append(reservationNumber + " ").append("Sorry, the requested number of seats are not available at the moment in theater\n");
       return result.toString();
     }
 
-    //Primary preference is to give seats in the same row for a family at a row which is far
-    // away from the screen
-    for (int i = 0; i < rows.size(); i = i + 2) {
-      if (rows.get(i).getSeatsEmpty() >= numberOfSeats) {
+    // To maximize the customer satisfaction further we book all the seats in a single reservation together and farthest from the screen.
+    for (int i = 1; i < rows.size() + 1; i = i + 2) {
+      if (rows.get(i).getEmptySeats() >= numberOfSeats) {
         assignedSeats.add(rows.get(i).fillSeats(numberOfSeats, reservationNumber, totalSeats));
         break;
       }
     }
 
-    //When the seats are not available in the same row, allot the seats in different rows in the
-    // decreasing order
+    // When seats are not available in same row we split the seats.
     if (assignedSeats.isEmpty()) {
       sortedList = rows.stream().filter(row -> row.getName() % 2 != 0)
               .collect(Collectors.toList());
-      Collections.sort(sortedList, (a, b) -> b.getSeatsEmpty() - a.getSeatsEmpty());
+      Collections.sort(sortedList, (a, b) -> b.getEmptySeats() - a.getEmptySeats());
       int j = 0;
 
       while (j < sortedList.size() && numberOfSeats > 0) {
         if (!sortedList.get(j).isFilled()) {
-          int temp = sortedList.get(j).getSeatsEmpty();
+          int temp = sortedList.get(j).getEmptySeats();
           assignedSeats.add(sortedList.get(j).fillSeats(numberOfSeats, reservationNumber,
                   totalSeats));
           numberOfSeats = numberOfSeats - Math.min(temp, numberOfSeats);
