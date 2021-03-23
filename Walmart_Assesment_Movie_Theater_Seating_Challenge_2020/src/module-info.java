@@ -1,0 +1,2 @@
+module walmart_Assesment_Movie_Theater_Seating_Challenge_2020 {
+}
